@@ -7,3 +7,4 @@ then
 else
 	ping "$arg_ip" -c5
 fi
+
