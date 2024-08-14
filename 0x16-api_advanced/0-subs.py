@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 """
-Contains the number_of_subscribers function
+Contains the number_of_subscribers function.
 """
 
 import requests
 
+
 def number_of_subscribers(subreddit):
-    """Returns the number of subscribers for a given subreddit"""
+    """Returns the number of subscribers for a given subreddit."""
     if subreddit is None or not isinstance(subreddit, str):
         return 0
 
