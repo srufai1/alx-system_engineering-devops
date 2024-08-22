@@ -1,47 +1,25 @@
-# Setup New Ubuntu server with nginx
+# File:   7-puppet_install_nginx_web_server.pp
+# Author: Suleman Rufai
+# email:  <srufai100@gmail.com> or <ruftech24@gmail.com>
 
-exec { 'update system':
-        command => '/usr/bin/apt-get update',
-}
-
-package { 'nginx':
-	ensure => 'installed',
-	require => Exec['update system']
-}
-
-file {'/var/www/html/index.html':
-	content => 'Hello World!'
-}
-
-exec {'redirect_me':
-	command => 'sed -i "24i\	rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" /etc/nginx/sites-available/default',
-	provider => 'shell'
-}
-
-service {'nginx':
-	ensure => running,
-	require => Package['nginx']
-# Setup New Ubuntu server with nginx
-
-exec { 'update system':
-        command => '/usr/bin/apt-get update',
-}
+# Using Puppet| Install Nginx server, setup and configuration
 
 package { 'nginx':
-	ensure => 'installed',
-	require => Exec['update system']
+  ensure => 'installed'
 }
 
-file {'/var/www/html/index.html':
-	content => 'Hello World!'
+file { '/var/www/html/index.html':
+  content => 'Hello World',
 }
 
-exec {'redirect_me':
-	command => 'sed -i "24i\	rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" /etc/nginx/sites-available/default',
-	provider => 'shell'
+file_line { 'redirection-301':
+  ensure => 'present',
+  path   => '/etc/nginx/sites-available/default',
+  after  => 'listen 80 default_server;',
+  line   => 'rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;',
 }
 
-service {'nginx':
-	ensure => running,
-	require => Package['nginx']
-}}
+service { 'nginx':
+  ensure  => running,
+  require => Package['nginx'],
+}
